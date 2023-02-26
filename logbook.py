@@ -22,7 +22,7 @@ def main(path_to_file):
     logging = command_inquiry(path_to_file)
     
     if not logging:
-        quit_msg = ''.join("Quitting program. Do you want to remove the .csv file you created? " 
+        quit_msg = ''.join("Quitting program. Do you want to remove the .csv file? " 
                            "If so, write 'remove'. Otherwise just click enter to quit program.\n")
         remove_file_inquiry = input(quit_msg)
         if 'remove' in remove_file_inquiry:
@@ -40,7 +40,7 @@ def command_inquiry(path_to_file):
         
         command = input("What do you want to do? [l]og / [c]heck / [q]uit: ")
 
-        if command == "l" or 'log' in command:
+        if command == "l" or 'log' in command.lower():
             log_date = date_inquiry() 
             if 'quit' in str(log_date):
                 return False
@@ -53,15 +53,15 @@ def command_inquiry(path_to_file):
             
             write_to_log(path_to_file, log_date, log_hours, log_action)
 
-        elif command == "c" or 'check' in command:
+        elif command == "c" or 'check' in command.lower():
             check(path_to_file)
 
-        elif command == "q" or 'quit' in command:
+        elif command == "q" or 'quit' in command.lower():
             return False
 
         else:
-            print(f"You entered '{command}'. Valid commands are l "
-                   "for logging, c for checking, and q for quitting.")
+            print(f"You entered '{command}'. Valid commands are l or log "
+                   "for logging, c or check for checking, and q or quit for quitting.")
 
 def date_inquiry():
     times_inquired = 0
@@ -127,6 +127,7 @@ def write_to_log(path_to_file, date, hours, action):
     with open(path_to_file, "a", encoding="utf_8", newline="") as file:
         logwriter = writer(file)
         logwriter.writerow(log_data)
+        print("Success.")
 
 
 def check(path_to_file):
