@@ -13,7 +13,6 @@ Valid actions are 'l' (log), 'c' (check) and 'q' (quit)
 import os
 import sys
 from csv import reader, writer
-from encodings import utf_8
 import datetime
 
 
@@ -120,11 +119,12 @@ def hours_inquiry():
             continue
 
 def action_inquiry():
-    log_action = input("Action to be logged: ") 
-    if len(log_action) <= 1:
-        print("You need to log some sort of action.")
-        action_inquiry()
-    return log_action
+    while True:
+        log_action = input("Action to be logged: ")
+        if len(log_action) <= 1:
+            print("You need to log some sort of action.")
+            continue
+        return log_action
 
 
 def write_to_log(path_to_file,paiva, tunnit, syy):
