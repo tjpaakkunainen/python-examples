@@ -13,8 +13,7 @@ Valid actions are 'l' (log), 'c' (check) and 'q' (quit)
 import os
 import sys
 from csv import reader, writer
-import datetime
-
+import datetime as dt
 
 
 def main(path_to_file):
@@ -23,11 +22,9 @@ def main(path_to_file):
     logging = command_inquiry(path_to_file)
     
     if not logging:
-
         quit_msg = ''.join("Quitting program. Do you want to remove the .csv file you created? " 
                            "If so, write 'remove'. Otherwise just click enter to quit program.\n")
         remove_file_inquiry = input(quit_msg)
-
         if 'remove' in remove_file_inquiry:
             try:
                 os.remove(path_to_file)
@@ -44,14 +41,11 @@ def command_inquiry(path_to_file):
         command = input("What do you want to do? [l]og / [c]heck / [q]uit: ")
 
         if command == "l":
-            
             log_date = date_inquiry() 
-
             if 'quit' in str(log_date):
                 return False
             
             log_hours = hours_inquiry() 
-            
             if 'quit' in log_hours.lower():
                 return False
 
@@ -59,15 +53,19 @@ def command_inquiry(path_to_file):
             
             write_to_log(path_to_file, log_date, log_hours, log_action)
 
-        if command == "c":
+        elif command == "c":
             check(path_to_file)
 
-        if command == "q":
+        elif command == "q":
             return False
+
+        else:
+            print(f"You entered '{command}'. Valid commands are l "
+                   "for logging, c for checking, and q for quitting.")
 
 def date_inquiry():
     times_inquired = 0
-    today = datetime.datetime.now()
+    today = dt.datetime.now()
     while True:
         log_date = input("Date to be logged: ")
 
@@ -78,12 +76,9 @@ def date_inquiry():
             log_date = f"{today.day}.{today.month}.{today.year}"
             print(f"Logged today: {log_date}")
             return log_date
-
-        if 1 < len(str(log_date)) < 7:
-            log_date+=str(today.year)
         
         try:
-            log_date_datetime= datetime.datetime.strptime(log_date, "%d.%m.%Y")
+            log_date_datetime= dt.datetime.strptime(log_date, "%d.%m.%Y")
             log_date_formatted = f"{log_date_datetime.day}.{log_date_datetime.month}.{log_date_datetime.year}"
             print(f"log date formatted: {log_date_formatted}")
             return log_date_formatted
