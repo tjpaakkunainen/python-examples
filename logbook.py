@@ -34,7 +34,6 @@ def main(path_to_file):
 
         print("Bye!")        
 
-
 def command_inquiry(path_to_file):
     while True:
         
@@ -86,7 +85,6 @@ def date_inquiry():
             if times_inquired > 1:
                 print("To quit program, write 'quit'.")
             continue
-
 
 def hours_inquiry():
     times_inquired = 0
