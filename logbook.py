@@ -40,7 +40,7 @@ def command_inquiry(path_to_file):
         
         command = input("What do you want to do? [l]og / [c]heck / [q]uit: ")
 
-        if command == "l":
+        if command == "l" or 'log' in command:
             log_date = date_inquiry() 
             if 'quit' in str(log_date):
                 return False
@@ -53,10 +53,10 @@ def command_inquiry(path_to_file):
             
             write_to_log(path_to_file, log_date, log_hours, log_action)
 
-        elif command == "c":
+        elif command == "c" or 'check' in command:
             check(path_to_file)
 
-        elif command == "q":
+        elif command == "q" or 'quit' in command:
             return False
 
         else:
@@ -79,9 +79,7 @@ def date_inquiry():
         
         try:
             log_date_datetime= dt.datetime.strptime(log_date, "%d.%m.%Y")
-            log_date_formatted = f"{log_date_datetime.day}.{log_date_datetime.month}.{log_date_datetime.year}"
-            print(f"log date formatted: {log_date_formatted}")
-            return log_date_formatted
+            return f"{log_date_datetime.day}.{log_date_datetime.month}.{log_date_datetime.year}"
         except ValueError:
             print(f"{log_date} is not valid date. You need to give a valid date, such as 30.1.2023.")
             times_inquired += 1
@@ -105,7 +103,6 @@ def hours_inquiry():
             else:
                 print(f"You can log 0-24 hours at a time.")
                 continue
-            
         except ValueError:
             print("You need to give hours in some valid numerical format (e.g. 1, 6.5 or 3,5).")
             times_inquired += 1
@@ -122,9 +119,9 @@ def action_inquiry():
         return log_action
 
 
-def write_to_log(path_to_file,paiva, tunnit, syy):
+def write_to_log(path_to_file, date, hours, action):
     
-    log_data = [f"{paiva}", str(tunnit).replace(".", ","), syy]
+    log_data = [f"{date}", str(hours).replace(".", ","), action]
 
     with open(path_to_file, "a", encoding="utf_8", newline="") as file:
         logwriter = writer(file)
@@ -134,7 +131,6 @@ def write_to_log(path_to_file,paiva, tunnit, syy):
 def check(path_to_file):
     try:
         with open (path_to_file, encoding="utf_8") as file:
-            
             print("")
             column_day = "DAY"
             column_hours = "HOURS"
