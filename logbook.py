@@ -97,6 +97,7 @@ def hours_inquiry():
             return log_hours
         
         log_hours = log_hours.replace(",", ".")
+
         try:
             if 0 < float(log_hours) <= 24.0:
                 return log_hours
@@ -120,7 +121,7 @@ def action_inquiry():
 
 
 def write_to_log(path_to_file, date, hours, action):
-    
+ 
     log_data = [f"{date}", str(hours).replace(".", ","), action]
 
     with open(path_to_file, "a", encoding="utf_8", newline="") as file:
@@ -131,11 +132,10 @@ def write_to_log(path_to_file, date, hours, action):
 def check(path_to_file):
     try:
         with open (path_to_file, encoding="utf_8") as file:
-            print("")
             column_day = "DAY"
             column_hours = "HOURS"
             column_action = "ACTION"
-            print(f"{column_day:15} {column_hours:15} {column_action:15}")
+            print(f"\n{column_day:15} {column_hours:15} {column_action:15}")
 
             log_reader = reader(file)
             total = 0
