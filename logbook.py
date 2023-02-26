@@ -19,20 +19,44 @@ import datetime
 
 
 def main(path_to_file):
-    print(""); print("Welcome to a simple logbook!"); print("")
+    print("\nWelcome to a simple logbook! \n")
+    
+    logging = command_inquiry(path_to_file)
+    
+    if not logging:
+
+        quit_msg = ''.join("Quitting program. Do you want to remove the .csv file you created? " 
+                           "If so, write 'remove'. Otherwise just click enter to quit program.\n")
+        remove_file_inquiry = input(quit_msg)
+
+        if 'remove' in remove_file_inquiry:
+            try:
+                os.remove(path_to_file)
+                print("Removed file.", end=" ")
+            except FileNotFoundError:
+                print("Couldn't remove file. If it exists, please remove it manually.")
+
+        print("Bye!")        
+
+
+def command_inquiry(path_to_file):
     while True:
+        
         command = input("What do you want to do? [l]og / [c]heck / [q]uit: ")
+
         if command == "l":
+            
             log_date = date_inquiry() 
-            if log_date == False:
-                continue
+
+            if 'quit' in str(log_date):
+                return False
+            
             log_hours = hours_inquiry() 
-            if log_hours == False: 
-                continue
-            log_action = input("Action to be logged: ") 
-            if not log_action:
-                print("You need to log some sort of action.")
-                continue
+            
+            if 'quit' in log_hours.lower():
+                return False
+
+            log_action = action_inquiry()
             
             write_to_log(path_to_file, log_date, log_hours, log_action)
 
@@ -40,56 +64,72 @@ def main(path_to_file):
             check(path_to_file)
 
         if command == "q":
-            quit = ''.join("Quitting program. Do you want to remove the .csv file you created? " 
-                           "If so, write 'remove'. Otherwise just click enter to quit program. \n")
-            remove_file_inquiry = input(quit)
-            if 'remove' in remove_file_inquiry:
-                try:
-                    os.remove(path_to_file)
-                    print("Removed file.", end=" ")
-                except ValueError:
-                    print("Couldn't remove file. Please remove it manually.")
-            print("Bye!")        
-            break
+            return False
 
 def date_inquiry():
+    times_inquired = 0
     today = datetime.datetime.now()
     while True:
         log_date = input("Date to be logged: ")
 
-        if not log_date:
-            return today
+        if 'quit' in log_date.lower():
+            return log_date.lower()
 
-        if 1 < len(log_date) < 7:
+        if not log_date:
+            log_date = f"{today.day}.{today.month}.{today.year}"
+            print(f"Logged today: {log_date}")
+            return log_date
+
+        if 1 < len(str(log_date)) < 7:
             log_date+=str(today.year)
         
         try:
-            log_date_formatted = datetime.datetime.strptime(log_date, "%d.%m.%Y")
+            log_date_datetime= datetime.datetime.strptime(log_date, "%d.%m.%Y")
+            log_date_formatted = f"{log_date_datetime.day}.{log_date_datetime.month}.{log_date_datetime.year}"
+            print(f"log date formatted: {log_date_formatted}")
             return log_date_formatted
         except ValueError:
-            print("You need to give a valid date. Restarting program.")
-            return False
+            print(f"{log_date} is not valid date. You need to give a valid date, such as 30.1.2023.")
+            times_inquired += 1
+            if times_inquired > 1:
+                print("To quit program, write 'quit'.")
+            continue
 
 
 def hours_inquiry():
+    times_inquired = 0
     while True:
         log_hours = input("Hours to be logged: ")
+        
+        if 'quit' in log_hours.lower():
+            return log_hours
+        
         log_hours = log_hours.replace(",", ".")
         try:
             if 0 < float(log_hours) <= 24.0:
                 return log_hours
             else:
-                print(f"You can log 0-24 hours at a time. Restarting program.")
-                return False
+                print(f"You can log 0-24 hours at a time.")
+                continue
+            
         except ValueError:
-            print("You need to give hours in some valid numerical format (e.g. 1, 6.5 or 3,5). Restarting program.")
-            return False
+            print("You need to give hours in some valid numerical format (e.g. 1, 6.5 or 3,5).")
+            times_inquired += 1
+            if times_inquired > 1:
+                print("To quit program, write 'quit'.")
+            continue
 
+def action_inquiry():
+    log_action = input("Action to be logged: ") 
+    if len(log_action) <= 1:
+        print("You need to log some sort of action.")
+        action_inquiry()
+    return log_action
 
 
 def write_to_log(path_to_file,paiva, tunnit, syy):
     
-    log_data = [f"{paiva.day}.{paiva.month}.{paiva.year}", str(tunnit).replace(".", ","), syy]
+    log_data = [f"{paiva}", str(tunnit).replace(".", ","), syy]
 
     with open(path_to_file, "a", encoding="utf_8", newline="") as file:
         logwriter = writer(file)
@@ -99,6 +139,7 @@ def write_to_log(path_to_file,paiva, tunnit, syy):
 def check(path_to_file):
     try:
         with open (path_to_file, encoding="utf_8") as file:
+            
             print("")
             column_day = "DAY"
             column_hours = "HOURS"
