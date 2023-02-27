@@ -3,11 +3,15 @@ A simple program for logging days / hours for whatever activity.
 
 Give the program path to the .csv file where data should be recorded. 
 
-example: 
+Example command: 
 
 python logbook.py logbook.csv
 
 Valid actions are 'l' (log), 'c' (check) and 'q' (quit)
+
+Log let's you record date, hours and activity. Check let's you
+view what's currently in your logbook. Quit let's you ... quit.
+And optionally remove the .csv file where logs were stored.
 """
 
 import os
