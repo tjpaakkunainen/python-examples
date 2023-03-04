@@ -28,8 +28,8 @@ def main(path_to_file):
     if not logging:
         quit_msg = ''.join("Quitting program. Do you want to remove the .csv file? " 
                            "If so, write 'remove'. Otherwise just click enter to quit program.\n")
-        remove_file_inquiry = input(quit_msg)
-        if 'remove' in remove_file_inquiry:
+        remove_file_inquiry = str(input(quit_msg))
+        if 'remove' in remove_file_inquiry.lower():
             try:
                 os.remove(path_to_file)
                 print("Removed file.", end=" ")
@@ -157,7 +157,7 @@ def check(path_to_file):
 
 if __name__ == "__main__":
     args = sys.argv[1:]
-    if len(args) > 2 or "--help" in args:
+    if not args or len(args) > 2 or "--help" in args:
         sys.exit(__doc__)
     try:
         main(*args)
