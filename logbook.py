@@ -20,7 +20,7 @@ from csv import reader, writer
 import datetime as dt
 
 
-def main(path_to_file):
+def main(path_to_file="example.csv"):
     print("\nWelcome to a simple logbook! \n")
     
     logging = command_inquiry(path_to_file)
@@ -157,7 +157,7 @@ def check(path_to_file):
 
 if __name__ == "__main__":
     args = sys.argv[1:]
-    if not args or len(args) > 2 or "--help" in args:
+    if len(args) > 2 or "--help" in args:
         sys.exit(__doc__)
     try:
         main(*args)
